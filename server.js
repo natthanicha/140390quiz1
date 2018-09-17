@@ -1,34 +1,41 @@
 var express = require('express');
-var pgp = require('pg-promise')();
-var db = pgp('postgres://nkwnjxuiidwrns:b72b4de42f726173c9acee8a85dd10ed1c8dc1a2ab7402a6feebbbccb8b14f85@ec2-54-163-245-44.compute-1.amazonaws.com:5432/d34ii1v5fr4h1e?ssl=true');
+
+var mysql = require('mysql')
+var connection = mysql.createConnection({
+  host     : 'www.db4free.net',
+  database : 'db140390',
+  user     : 's140390',
+  password : 'abc123**'
+});
+
+connection.connect()
+
+connection.query('SELECT * from students', function (err, rows, fields) {
+  if (err) throw err
+
+  console.log('The solution is: ', rows[0].solution)
+})
+
+connection.end()
 var app = express();
 
-//app.use(express.static ('static') );
+
 app.set('view engine', 'ejs');
 
 app.get('/', function(req, res) {
-    res.render('pages/index');
-        
-    });
-
-    app.get('/about', function(req, res) {
-        var name = ['BUBBLE'];
-        var hobbies = ['Music','Movie','Programming'];
-        var bdate ='27/03/1997';
-        res.render('pages/about',{fullname : name, hobbies:hobbies,bdate: bdate});
-            
+    res.render('pages/index');            
         });
-    //Display all products
-        app.get('/products', function(req, res) {
-            var id = req.param('id');
-            var sql='select* from products';
-                if(id){
-                    sql += ' where id ='+id;
+    //Display all students
+        app.get('/students', function(req, res) {
+            var sid = req.param('sid');
+            var sql='select* from students';
+                if(sid){
+                    sql += ' where sid ='+sid;
                 }
            db.any(sql)
             .then(function(data){
                 console.log('DATA:'+data);
-                res.render('pages/products',{products: data})
+                res.render('pages/students',{students: data})
                 
             })
             .catch(function(error){
@@ -36,17 +43,17 @@ app.get('/', function(req, res) {
             })
 
         });
-   //Display all user
-            app.get('/users/:id', function(req, res) {
-                var id = req.param('id');
-                var sql='select* from users';
+   //Display all subjects
+            app.get('/subjects/:code', function(req, res) {
+                var id = req.param('code');
+                var sql='select* from subjects';
                 if(id){
-                    sql += ' where id ='+id;
+                    sql += ' where code ='+code;
                 }
                 db.any(sql)
                  .then(function(data){
-                     console.log('DATA:'+data);
-                     res.render('pages/users',{users: data})
+                     console.log('DATAa:'+data);
+                     res.render('pages/subjects',{subjects: data})
                      
                  })
                  .catch(function(error){
