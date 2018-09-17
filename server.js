@@ -9,12 +9,13 @@ var connection = mysql.createConnection({
 });
 
 connection.connect()
-
 app.set('view engine', 'ejs');
-
 app.get('/', function (req, res) {
     res.render('pages/index');
 });
+
+
+
 //Display all students
 app.get('/students', function (req, res) {
     connection.query('SELECT * from students', function (err, rows, fields) {
@@ -22,10 +23,12 @@ app.get('/students', function (req, res) {
         res.render('pages/students', { students: rows })
         console.log(rows)
     })
-    connection.end();
+
 });
 
 
+
+//Display all subjects
 app.get('/subjects', function (req, res) {
     connection.query('SELECT * from subjects', function (err, rows, fields) {
         if (err) throw err
@@ -33,10 +36,8 @@ app.get('/subjects', function (req, res) {
         console.log(rows)
     })
 
-connection.end();
 });
 
 
 console.log('App is running at http://localhost:8080');
-
 app.listen(8080);
